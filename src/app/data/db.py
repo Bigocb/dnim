@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 
 try:
-    client = MongoClient("localhost", 27017)
+    client = MongoClient(username="bigocb", password="lscooter11",host="mongodb", port=27017 )
     db = client.dnim
     topics = db.topics
 except:

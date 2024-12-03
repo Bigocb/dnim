@@ -1,4 +1,3 @@
-version: '3.7'
 services:
   backend:
     build: ./src
@@ -11,3 +10,14 @@ services:
       - ./.docker/.ipython:/root/.ipython:cached
     environment:
       PYTHONPATH: .
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "bigocb"
+      MONGO_INITDB_ROOT_PASSWORD: "lscooter11"
+    volumes:
+      - ./db:/data/db
