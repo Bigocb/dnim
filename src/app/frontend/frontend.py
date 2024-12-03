@@ -6,19 +6,14 @@ import difflib
 
 import markdown
 
-# todo: Refactor
 db = Database()
 search_field = None
 results = ui.row()
 
 class Helpers:
-    def __init__(self):
-        pass
-
 
     def handle_click(self, arg):
             db.insert_topic(arg)
-            self.get_topic.refresh
 
 
     def get_diff(self, old, current):
@@ -49,6 +44,21 @@ class Helpers:
         with ui.footer().style('background-color: #3874c8'):
             ui.label('Created by TheJoeDev').style('color: white; font-size: 75%; font-weight: 300')
 
+    @ui.refreshable
+    def get_versions_list(self,topic: str, current):
+        print(f"HERE: {topic}")
+        with ui.card().classes('col-span-4 md:col-span-4 row-span-1 h-full'):
+            ui.label("Versions").style('color: #6E93D6; font-size: 200%; font-weight: 300')
+            ui.separator()
+            resp = db.get_versions(topic)
+            for i in resp:
+                with ui.card().classes('col-span-1 md:col-span-1 row-span-1 h-full w-full'):
+                    with ui.dialog() as dialog, ui.card().classes('w-full h-full').style('max-width: none'):
+                        ui.label(f"{i['ts']} vs. Current")
+                        ui.html(self.get_diff(i, current))
+                        ui.button('Close', on_click=dialog.close)
+                    ui.button(f"{i['ts']}", on_click=dialog.open)
+
 
     def get_topic(self, topic: str):
 
@@ -60,11 +70,12 @@ class Helpers:
                 ts = datetime.now(),
                 tags=res['tags']
             )
+
         with ui.card().classes('col-span-4 md:col-span-4 row-span-1 h-full'):
                 ui.separator()
                 with ui.row():
                     ui.label(f"{res['topic']}").style('color: #6E93D6; font-size: 200%; font-weight: 300')
-                    switch = ui.switch()
+                    switch = ui.switch(on_change=self.get_versions_list.refresh(res['topic'], res))
                     ui.chip(icon='save', on_click=lambda: db.insert_topic(new_page)).bind_visibility_from(switch, 'value')
                 ui.separator()
                 p = ui.codemirror(f"{res['body']}",language='Python').classes('h-32').bind_value_to(
@@ -74,18 +85,11 @@ class Helpers:
                 ui.markdown().bind_content_from(p, 'value',
                                 backward=lambda v: f'{v}')
                 ui.separator()
-                resp = db.get_versions(res['topic'])
 
-        with ui.card().classes('col-span-4 md:col-span-4 row-span-1 h-full') as preview:
-            ui.label(f"Versions").style('color: #6E93D6; font-size: 200%; font-weight: 300')
-            ui.separator()
-            for i in resp:
-                with ui.card().classes('col-span-1 md:col-span-1 row-span-1 h-full w-full'):
-                    with ui.dialog() as dialog, ui.card().classes('w-full h-full').style('max-width: none'):
-                        ui.label(f"{i['ts']} vs. Current")
-                        ui.html(self.get_diff(i, res))
-                        ui.button('Close', on_click=dialog.close)
-                    ui.button(f"{i['ts']}", on_click=dialog.open)
+        self.get_versions_list(res['topic'], res)
+
+
+
 
 
 def init(fastapi_app: FastAPI) -> None:
@@ -117,7 +121,7 @@ def init(fastapi_app: FastAPI) -> None:
                     .classes('w-96 self-center mt-24 transition-all')
                 results = ui.row()
                 ui.separator()
-            with ui.card().classes('col-span-4 md:col-span-2 row-span-2 h-full') as preview:
+            with ui.card().classes('col-span-4 md:col-span-2 row-span-2 h-full'):
                 ui.separator()
                 with ui.list().props('dense separator'):
                     tops = db.get_last_n_topics(5)
@@ -183,7 +187,7 @@ def init(fastapi_app: FastAPI) -> None:
                 body = ui.codemirror(language='Python').classes('h-32').bind_value_to(
                     target_object=page, target_name="body"
                 )
-            with ui.card().classes('col-span-4 md:col-span-2 row-span-2 h-full') as preview:
+            with ui.card().classes('col-span-4 md:col-span-2 row-span-2 h-full'):
                 ui.markdown().bind_content_from(topic, 'value',
                                 backward=lambda o: f'{o}')
                 ui.separator()

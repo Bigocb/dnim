@@ -6,15 +6,15 @@ import os
 USER = os.environ.get("MUSER")
 PASS = os.environ.get("MPASS")
 HOST = os.environ.get("MHOST")
-PORT = os.environ.get("MPORT")
+PORT = int(os.environ.get("MPORT"))
 
 
 try:
     client = MongoClient(username=USER, password=PASS,host=HOST, port=PORT )
     db = client.dnim
     topics = db.topics
-except:
-    raise Exception("DB Cannot be reached")
+except Exception:
+    raise ValueError("DB Cannot be reached")
 
 
 @dataclass
@@ -29,15 +29,12 @@ class Database:
 
 
     def insert_topic(self, topic: Page):
-        id = topics.insert_one({
+       return topics.insert_one({
             "topic":f"{topic.topic}",
             "body":f"{topic.body}",
             "tags":f"{topic.tags}",
             "ts" : f"{topic.ts}"
             }).inserted_id
-        return topics.find_one({"topic": topic.topic})
-
-
 
     def get_page(self, topic):
         sea = topics.find({'topic' : topic}).sort({'_id':-1})
@@ -48,7 +45,7 @@ class Database:
         sea = topics.find_one({'topic' : topic, '_id': version})
         return sea
 
-    def get_versions(seld, topic):
+    def get_versions(self, topic):
         sea = topics.find({'topic' : topic}).sort({'_id':-1}).limit(5)
         return sea
     
@@ -63,7 +60,6 @@ class Database:
             res = topics.find({})
         res_list = []
         for i,v in enumerate(res):
-            t = v['topic']
             if v['topic'] not in res_list:
                 res_list.append(v['topic'])
             

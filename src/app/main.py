@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 import uvicorn
-from api.api_v1.routers import pages
 
 from frontend import frontend
-from fastapi import FastAPI
 from starlette.responses import RedirectResponse
 
 app = FastAPI(
@@ -22,9 +20,6 @@ async def root_redirect():
 @app.get('/api/v1')
 async def read_root():
     return {'Hello': 'World'}
-
-
-app.include_router(pages.router, prefix="/api/v1")
 
 frontend.init(app)
 
