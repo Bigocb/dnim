@@ -113,7 +113,7 @@ def init(fastapi_app: FastAPI) -> None:
                 ts = datetime.now(),
                 tags=res['tags']
             )
-        with ui.card().classes('col-span-4 md:col-span-2 row-span-2 h-full'):
+        with ui.card().classes('col-span-4 md:col-span-4 row-span-1 h-full'):
                 ui.separator()
                 with ui.row():
                     ui.label(f"{res['topic']}").style('color: #6E93D6; font-size: 200%; font-weight: 300')
@@ -127,24 +127,31 @@ def init(fastapi_app: FastAPI) -> None:
                 ui.markdown()
                 ui.markdown().bind_content_from(p, 'value',
                                 backward=lambda v: f'{v}')
-        with ui.card().classes('col-span-4 md:col-span-2 row-span-1 h-full') as preview:
-                ui.separator()
-                ui.label('Preview')
-                ui.separator()
-                ui.markdown().bind_content_from(p, 'value',
-                                backward=lambda v: f'{v}')
-        with ui.card().classes('col-span-4 md:col-span-2 row-span-1 h-full') as preview:
                 ui.separator()
                 resp = db.get_versions(res['topic'])
-                ui.label('Versions')
-                ui.separator()
-                for i in resp:
-                        with ui.card().classes('col-span-1 md:col-span-1 row-span-1 h-full w-full'):
-                            with ui.dialog() as dialog, ui.card().classes('w-full h-full').style('max-width: none'):
-                                ui.label(f"{i['ts']} vs. Current")
-                                ui.html(get_diff(i, res))
-                                ui.button('Close', on_click=dialog.close)
-                            ui.button(f"{i['ts']}", on_click=dialog.open)
+
+        with ui.card().classes('col-span-4 md:col-span-4 row-span-1 h-full') as preview:
+            ui.label(f"Versions").style('color: #6E93D6; font-size: 200%; font-weight: 300')
+            ui.separator()
+            for i in resp:
+                with ui.card().classes('col-span-1 md:col-span-1 row-span-1 h-full w-full'):
+                    with ui.dialog() as dialog, ui.card().classes('w-full h-full').style('max-width: none'):
+                        ui.label(f"{i['ts']} vs. Current")
+                        ui.html(get_diff(i, res))
+                        ui.button('Close', on_click=dialog.close)
+                    ui.button(f"{i['ts']}", on_click=dialog.open)
+        # with ui.card().classes('col-span-4 md:col-span-2 row-span-1 h-full') as preview:
+        #         ui.separator()
+        #         resp = db.get_versions(res['topic'])
+        #         ui.label('Versions')
+        #         ui.separator()
+        #         for i in resp:
+        #                 with ui.card().classes('col-span-1 md:col-span-1 row-span-1 h-full w-full'):
+        #                     with ui.dialog() as dialog, ui.card().classes('w-full h-full').style('max-width: none'):
+        #                         ui.label(f"{i['ts']} vs. Current")
+        #                         ui.html(get_diff(i, res))
+        #                         ui.button('Close', on_click=dialog.close)
+        #                     ui.button(f"{i['ts']}", on_click=dialog.open)
 
     @ui.page('/topics/{topic}')
     def show_page_single(topic:str):
