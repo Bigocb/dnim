@@ -1,9 +1,16 @@
 from pymongo import MongoClient
 from dataclasses import dataclass
+import os
+
+
+USER = os.environ.get("MUSER")
+PASS = os.environ.get("MPASS")
+HOST = os.environ.get("MHOST")
+PORT = os.environ.get("MPORT")
 
 
 try:
-    client = MongoClient(username="bigocb", password="lscooter11",host="mongodb", port=27017 )
+    client = MongoClient(username=USER, password=PASS,host=HOST, port=PORT )
     db = client.dnim
     topics = db.topics
 except:
