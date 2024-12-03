@@ -35,19 +35,19 @@ class Helpers:
     def get_headers(self):
         with ui.header(elevated=True).style('background-color: #3874c8').classes('items-center justify-between'):
             ui.button(on_click=lambda: left_drawer.toggle(), icon='menu').props('flat color=white')
-            ui.label('HEADER')
+            ui.link('DNIM','/').style('color: white; font-size: 200%; font-weight: 300; text-decoration: none')
         with ui.left_drawer(fixed=False, top_corner=True, bottom_corner=True).style('background-color: #d7e3f4') as left_drawer:
-            ui.label('LEFT DRAWER')
             ui.link('Topics','/topics')
             ui.link('New Topic','/new')
     
     def get_footers(self):
         with ui.footer().style('background-color: #3874c8'):
-            ui.label('FOOTER')
+            ui.label('Created by TheJoeDev').style('color: white; font-size: 75%; font-weight: 300')
 
 
 def init(fastapi_app: FastAPI) -> None:
     h = Helpers()
+
     @ui.page('/')
     def show():
         async def search(e: events.ValueChangeEventArguments) -> None:
