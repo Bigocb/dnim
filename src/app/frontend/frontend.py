@@ -95,7 +95,7 @@ def init(fastapi_app: FastAPI) -> None:
 
 
     @ui.page('/')
-    def show():
+    def home():
         async def search(e: events.ValueChangeEventArguments) -> None:
             global search_field
             global results
@@ -131,7 +131,7 @@ def init(fastapi_app: FastAPI) -> None:
 
 
     @ui.page('/topics')
-    def show():
+    def topics():
         h.get_headers()
         ui.label("Topics")
         
@@ -150,7 +150,7 @@ def init(fastapi_app: FastAPI) -> None:
     
 
     @ui.page('/topics/{topic}')
-    def show_page_single(topic:str):
+    def topics_single(topic:str):
 
         h.get_headers()
         
@@ -160,8 +160,8 @@ def init(fastapi_app: FastAPI) -> None:
         h.get_footers()
 
 
-    @ui.page('/new')
-    def show():
+    @ui.page('/topics/new')
+    def topic_new():
         h.get_headers()
 
         # create a new page object
