@@ -164,7 +164,7 @@ def init(fastapi_app: FastAPI) -> None:
         h.get_footers()
 
 
-    @ui.page('/topics/new')
+    @ui.page('/new')
     def topic_new():
         h.get_headers()
 

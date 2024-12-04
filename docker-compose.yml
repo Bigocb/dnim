@@ -4,24 +4,11 @@ services:
     ports:
       - "8678:8678"
     command: python app/main.py
+    environment:
+      - M_PASS=${M_PASS}
+      - M_USER=${M_USER}
+      - M_HOST=${M_HOST}
     tty: true
     volumes:
       - ./src:/app/:cached
       - ./.docker/.ipython:/root/.ipython:cached
-    environment:
-      PYTHONPATH: .
-      MUSER: "bigocb"
-      MPASS: "lscooter11"
-      MHOST: "mongodb"
-      MPORT: "27017"
-  mongodb:
-    image: mongo
-    container_name: mongodb
-    restart: always
-    ports:
-      - '27017:27017'
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "bigocb"
-      MONGO_INITDB_ROOT_PASSWORD: "lscooter11"
-    volumes:
-      - ./db:/data/db
