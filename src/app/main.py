@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from fastapi import FastAPI
 import uvicorn
-
 from frontend import frontend
 from starlette.responses import RedirectResponse
 

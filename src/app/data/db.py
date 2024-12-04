@@ -1,16 +1,16 @@
 from pymongo import MongoClient
+from pymongo.server_api import ServerApi
 from dataclasses import dataclass
 import os
 
 
-USER = os.environ.get("MUSER")
-PASS = os.environ.get("MPASS")
-HOST = os.environ.get("MHOST")
-PORT = int(os.environ.get("MPORT"))
+USER = os.environ.get("M_USER")
+PASS = os.environ.get("M_PASS")
+HOST = os.environ.get("M_HOST")
 
-
+uri = f"mongodb+srv://{USER}:{PASS}@{HOST}"
 try:
-    client = MongoClient(username=USER, password=PASS,host=HOST, port=PORT )
+    client = MongoClient(uri, server_api=ServerApi('1'))
     db = client.dnim
     topics = db.topics
 except Exception:
