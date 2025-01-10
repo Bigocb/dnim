@@ -1,6 +1,6 @@
 # Dnim
 
-Dnim is a simple markdown note-taking app built using FastAPI, Nicegui, and MongoDB. The project is designed to experiment with these technologies.
+Dnim is a simple markdown note-taking app built using FastAPI, Nicegui, and MongoDB. The project was designed to experiment with these technologies.
 
 ## Features
 - Markdown-based note-taking interface.
